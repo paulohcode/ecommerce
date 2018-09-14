@@ -1,55 +1,57 @@
 <?php
 
+//aqui identificamos a pasta onde esta a classe page
 namespace Hcode;
 
+//chamado o Tpl
 use Rain\Tpl;
 
+//criando a classe
 class Page {
 
 	//instanciar as variaveis
 	private $tpl;
 	private $options;
 	private $defaults = [
-		"data"=>[]
+		"header" => true,
+		"footer" => true,
+		"data" => [],
+
 	];
-	
-	public function __construct($opts = array(), $tpl_dir = "/views/")
-	{
 
-	$this->options = array_merge($this->defaults, $opts);
-	// config
-	$config = array(
-		"tpl_dir"       => $_SERVER["DOCUMENT_ROOT"] . $tpl_dir,
-		"cache_dir"     => $_SERVER["DOCUMENT_ROOT"] . "/views-cache/",
-		"debug"         => false // set to false to improve the speed
-	   );
+	//criando o metodo construtor
+	public function __construct($opts = array(), $tpl_dir = "/views/") {
 
-	Tpl::configure( $config );
+		$this->options = array_merge($this->defaults, $opts);
+		// config
+		$config = array(
+			"tpl_dir" => $_SERVER["DOCUMENT_ROOT"] . $tpl_dir, //pegar a pasta raiz do sistema/a pasta onde esta os arquivos da view
+			"cache_dir" => $_SERVER["DOCUMENT_ROOT"] . "/views-cache/",
+			"debug" => false,
+		);
 
-	   $this->tpl = new Tpl;
+		Tpl::configure($config);
 
-	   
-	   $this->setData($this->options["data"]);
+		//criar um novo tpl
+		$this->tpl = new Tpl;
 
-	   
+		$this->setData($this->options["data"]);
 
-	   $this->tpl->draw("header");
-		
-		
+		if ($this->options["header"] === true) {
+			$this->tpl->draw("header");
+		}
+
 	}
 
-	private function setData($data = array())
-	{
-		foreach ($this->options["data"] as $key => $value )
-	   {
+	private function setData($data = array()) {
+		foreach ($this->options["data"] as $key => $value) {
 
-		$this->tpl->assign($key, $value);
+			$this->tpl->assign($key, $value);
 
-	   }	
+		}
 	}
 
-	public function setTpl($name, $data = array(), $returnHTML = false)
-	{
+	public function setTpl($name, $data = array(), $returnHTML = false) {
 
 		$this->setData($data);
 
@@ -57,15 +59,15 @@ class Page {
 
 	}
 
-	public function __destruct()
-	{
+	//criando o metodo destrutor
+	public function __destruct() {
 
-		$this->tpl->draw("footer");
-		
+		if ($this->options["footer"] === true) {
+			$this->tpl->draw("footer");
+		}
+
 	}
-	
-	
-	
+
 }
 
 ?>
