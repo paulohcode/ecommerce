@@ -107,6 +107,10 @@ $app->get("/admin/users/:iduser", function ($iduser) {
 $app->post("/admin/users/create", function () {
 
 	User::verifiyLogin();
+		
+	$user = new User();
+	
+	$user->setData($_POST);
 
 });
 
